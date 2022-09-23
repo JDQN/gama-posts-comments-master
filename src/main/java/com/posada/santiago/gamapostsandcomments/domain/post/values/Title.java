@@ -1,4 +1,4 @@
-package com.posada.santiago.gamapostsandcomments.domain.values;
+package com.posada.santiago.gamapostsandcomments.domain.post.values;
 
 import co.com.sofka.domain.generic.ValueObject;
 

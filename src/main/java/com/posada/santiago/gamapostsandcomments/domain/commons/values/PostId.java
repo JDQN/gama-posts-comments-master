@@ -1,4 +1,4 @@
-package com.posada.santiago.gamapostsandcomments.domain.values;
+package com.posada.santiago.gamapostsandcomments.domain.commons.values;
 
 import co.com.sofka.domain.generic.Identity;
 

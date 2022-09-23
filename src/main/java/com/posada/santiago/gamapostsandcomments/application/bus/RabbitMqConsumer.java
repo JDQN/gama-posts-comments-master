@@ -3,11 +3,8 @@ package com.posada.santiago.gamapostsandcomments.application.bus;
 
 import com.google.gson.Gson;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.CommentModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.Notification;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.PostModel;
 import com.posada.santiago.gamapostsandcomments.application.controller.SocketController;
-import com.posada.santiago.gamapostsandcomments.domain.events.CommentAdded;
-import com.posada.santiago.gamapostsandcomments.domain.events.PostCreated;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
