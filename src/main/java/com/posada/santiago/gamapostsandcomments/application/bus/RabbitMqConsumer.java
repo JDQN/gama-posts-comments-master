@@ -4,6 +4,7 @@ package com.posada.santiago.gamapostsandcomments.application.bus;
 import com.google.gson.Gson;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.CommentModel;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.PostModel;
+import com.posada.santiago.gamapostsandcomments.application.bus.models.PostReactionModel;
 import com.posada.santiago.gamapostsandcomments.application.controller.SocketController;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,8 @@ public class RabbitMqConsumer {
     public static final String PROXY_QUEUE_COMMENT_ADDED = "events.proxy.comment.added";
 
     public static final String PROXY_QUEUE_POST_DELETED = "events.proxy.post.deleted";
+    public static final String PROXY_QUEUE_POST_REACTION_ADDED = "events.proxy.post.reaction.added";
+
 
     public RabbitMqConsumer(SocketController controller) {
         this.controller = controller;
@@ -43,4 +46,13 @@ public class RabbitMqConsumer {
         String postId = gson.fromJson(message, String.class);
         controller.sendPostDeleted("mainSpace", postId);
     }
+
+    @RabbitListener(queues = PROXY_QUEUE_POST_REACTION_ADDED)
+    public void listenToPostReactionAdded(String message) throws ClassNotFoundException {
+        System.out.println(message);
+        PostReactionModel reaction = gson.fromJson(message, PostReactionModel.class);
+        controller.sendPostReaction("mainSpace", reaction);
+    }
+
+
 }
