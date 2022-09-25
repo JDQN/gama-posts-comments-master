@@ -18,6 +18,8 @@ public class RabbitMqConsumer {
     public static final String PROXY_QUEUE_POST_CREATED = "events.proxy.post.created";
     public static final String PROXY_QUEUE_COMMENT_ADDED = "events.proxy.comment.added";
 
+    public static final String PROXY_QUEUE_POST_DELETED = "events.proxy.post.deleted";
+
     public RabbitMqConsumer(SocketController controller) {
         this.controller = controller;
     }
@@ -33,5 +35,12 @@ public class RabbitMqConsumer {
     public void listenToCommentAddedQueue(String message) throws ClassNotFoundException {
         CommentModel comment = gson.fromJson(message, CommentModel.class);
         controller.sendCommentAdded(comment.getPostId(), comment);
+    }
+
+    @RabbitListener(queues = PROXY_QUEUE_POST_DELETED)
+    public void listenToPostDeletedQueue(String message) throws ClassNotFoundException {
+        System.out.println(message);
+        String postId = gson.fromJson(message, String.class);
+        controller.sendPostDeleted("mainSpace", postId);
     }
 }
