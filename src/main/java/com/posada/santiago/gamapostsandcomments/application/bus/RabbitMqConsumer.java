@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.CommentModel;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.PostModel;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.PostReactionModel;
+import com.posada.santiago.gamapostsandcomments.application.bus.models.PostVoteModel;
 import com.posada.santiago.gamapostsandcomments.application.controller.SocketController;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,8 @@ public class RabbitMqConsumer {
 
     public static final String PROXY_QUEUE_POST_DELETED = "events.proxy.post.deleted";
     public static final String PROXY_QUEUE_POST_REACTION_ADDED = "events.proxy.post.reaction.added";
+
+    public static final String PROXY_QUEUE_POST_RELEVANTVOTE_UPDATED = "events.proxy.post.relevantvote.updated";
 
 
     public RabbitMqConsumer(SocketController controller) {
@@ -52,6 +55,13 @@ public class RabbitMqConsumer {
         System.out.println(message);
         PostReactionModel reaction = gson.fromJson(message, PostReactionModel.class);
         controller.sendPostReaction("mainSpace", reaction);
+    }
+
+    @RabbitListener(queues = PROXY_QUEUE_POST_RELEVANTVOTE_UPDATED)
+    public void listenToPostRelevantVoteUpdated(String message) throws ClassNotFoundException {
+        System.out.println(message);
+        PostVoteModel relevantVote = gson.fromJson(message, PostVoteModel.class);
+        controller.sendVoteUpdtated("mainSpace", relevantVote);
     }
 
 

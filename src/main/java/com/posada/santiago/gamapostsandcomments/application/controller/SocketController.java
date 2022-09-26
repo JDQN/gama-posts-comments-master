@@ -7,6 +7,7 @@ import com.posada.santiago.gamapostsandcomments.application.bus.models.CommentMo
 import com.posada.santiago.gamapostsandcomments.application.bus.models.Message;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.PostModel;
 import com.posada.santiago.gamapostsandcomments.application.bus.models.PostReactionModel;
+import com.posada.santiago.gamapostsandcomments.application.bus.models.PostVoteModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -114,6 +115,24 @@ public class SocketController {
 
     public void sendPostReaction(String correlationId, PostReactionModel model) {
         Message messageModel = new Message("ReactionAdded", gson.toJson(model));
+        var message = gson.toJson(messageModel);
+        if (Objects.nonNull(correlationId) && sessions.containsKey(correlationId)) {
+            logger.info("sent from " + correlationId);
+            logger.info("Message: " + message);
+            sessions.get(correlationId).values()
+                    .forEach(session -> {
+                        try {
+                            session.getAsyncRemote().sendText(message);
+                        } catch (RuntimeException e) {
+                            logger.log(Level.SEVERE, e.getMessage(), e);
+                        }
+                    });
+        }
+
+    }
+
+    public void sendVoteUpdtated(String correlationId, PostVoteModel model) {
+        Message messageModel = new Message("VoteUpdated", gson.toJson(model));
         var message = gson.toJson(messageModel);
         if (Objects.nonNull(correlationId) && sessions.containsKey(correlationId)) {
             logger.info("sent from " + correlationId);
