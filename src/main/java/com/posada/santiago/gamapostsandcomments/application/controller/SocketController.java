@@ -3,11 +3,7 @@ package com.posada.santiago.gamapostsandcomments.application.controller;
 
 import co.com.sofka.domain.generic.DomainEvent;
 import com.google.gson.Gson;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.CommentModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.Message;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.PostModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.PostReactionModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.PostVoteModel;
+import com.posada.santiago.gamapostsandcomments.application.bus.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -148,4 +144,23 @@ public class SocketController {
         }
 
     }
+
+	public void sendCommentDeleted(String correlationId, CommentDeleteModel commentDeleteModel) {
+		Message messageModel = new Message("CommentDeleted", gson.toJson(commentDeleteModel));
+		var message = gson.toJson(messageModel);
+		if (Objects.nonNull(correlationId) && sessions.containsKey(correlationId)) {
+			logger.info("sent from " + correlationId);
+			logger.info("Message: " + message);
+
+			sessions.get(correlationId).values()
+				 .forEach(session -> {
+					 try {
+						 session.getAsyncRemote().sendText(message);
+					 } catch (RuntimeException e) {
+						 logger.log(Level.SEVERE, e.getMessage(), e);
+					 }
+				 });
+		}
+	}
+
 }

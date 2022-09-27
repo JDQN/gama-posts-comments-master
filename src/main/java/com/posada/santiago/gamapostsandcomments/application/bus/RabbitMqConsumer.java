@@ -2,10 +2,7 @@ package com.posada.santiago.gamapostsandcomments.application.bus;
 
 
 import com.google.gson.Gson;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.CommentModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.PostModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.PostReactionModel;
-import com.posada.santiago.gamapostsandcomments.application.bus.models.PostVoteModel;
+import com.posada.santiago.gamapostsandcomments.application.bus.models.*;
 import com.posada.santiago.gamapostsandcomments.application.controller.SocketController;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -25,6 +22,7 @@ public class RabbitMqConsumer {
     public static final String PROXY_QUEUE_POST_REACTION_ADDED = "events.proxy.post.reaction.added";
 
     public static final String PROXY_QUEUE_POST_RELEVANTVOTE_UPDATED = "events.proxy.post.relevantvote.updated";
+		public static final String PROXY_QUEUE_POST_COMMENT_DELETED = "events.proxy.post.comment.deleted";
 
 
     public RabbitMqConsumer(SocketController controller) {
@@ -67,6 +65,13 @@ public class RabbitMqConsumer {
         PostVoteModel relevantVote = gson.fromJson(message, PostVoteModel.class);
         controller.sendVoteUpdtated("mainSpace", relevantVote);
     }
+
+	@RabbitListener(queues = PROXY_QUEUE_POST_COMMENT_DELETED)
+	public void listenToCommentDeletedQueue(String message) throws ClassNotFoundException {
+		System.out.println(message);
+		CommentDeleteModel commentToDelete= gson.fromJson(message, CommentDeleteModel.class);
+		controller.sendCommentDeleted(commentToDelete.getPostId(), commentToDelete);
+	}
 
 
 }
