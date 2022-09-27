@@ -3,7 +3,7 @@ package com.posada.santiago.gamapostsandcomments.application.bus.models;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +22,9 @@ public class PostModel {
     private Boolean deleted;
     private List<CommentModel> comments;
     private List<String> reactions;
+    private LocalDateTime creationDate;
+    private String dateFormated;
+
 
     public PostModel() {
         this.comments = new ArrayList<>();

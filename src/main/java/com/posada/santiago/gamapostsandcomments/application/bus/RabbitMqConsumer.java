@@ -7,6 +7,7 @@ import com.posada.santiago.gamapostsandcomments.application.controller.SocketCon
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @Component
@@ -32,6 +33,9 @@ public class RabbitMqConsumer {
     public void listenToPostCratedQueue(String message) throws ClassNotFoundException {
 			System.out.println(message);
         PostModel post = gson.fromJson(message, PostModel.class);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        String formattedDateTime = post.getCreationDate().format(formatter);
+        post.setDateFormated(formattedDateTime);
         controller.sendPostCreated("mainSpace", post);
     }
 
