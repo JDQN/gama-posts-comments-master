@@ -22,8 +22,6 @@ public class PostModel {
     private Boolean deleted;
     private List<CommentModel> comments;
     private List<String> reactions;
-    private LocalDateTime creationDate;
-    private String dateFormated;
 
 
     public PostModel() {

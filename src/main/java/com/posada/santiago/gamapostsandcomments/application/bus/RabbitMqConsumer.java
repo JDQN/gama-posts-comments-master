@@ -33,9 +33,6 @@ public class RabbitMqConsumer {
     public void listenToPostCratedQueue(String message) throws ClassNotFoundException {
 			System.out.println(message);
         PostModel post = gson.fromJson(message, PostModel.class);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String formattedDateTime = post.getCreationDate().format(formatter);
-        post.setDateFormated(formattedDateTime);
         controller.sendPostCreated("mainSpace", post);
     }
 
